@@ -1,0 +1,4 @@
+[mysqld]
+bind-address=0.0.0.0
+character-set-server=utf8mb4
+init-connect='SET NAMES utf8mb4'

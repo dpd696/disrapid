@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+
+    core:
+        depends_on: 
+            - database
+        build:
+            context: ./src/core
+            dockerfile: ./Dockerfile
+        environment:
+            - DISCORD_TOKEN=${DISCORD_TOKEN}
+            - DB_HOST=database
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - YOUTUBE_DEVELOPER_KEY=${YOUTUBE_DEVELOPER_KEY}
+        links:
+            - database
+        volumes:
+            - ./config/core/:/app/config
+
+    database:
+        image: mysql:5.7
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT}
+            - MYSQL_DATABASE=${DB_NAME}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+        volumes:
+            - db_vol:/var/lib/mysql
+            - ./config/database:/etc/mysql/conf.d
+
+volumes:
+    db_vol:

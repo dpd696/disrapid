@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+
+    core:
+        depends_on: 
+            - database
+        build:
+            context: ./src/core
+            dockerfile: ./Dockerfile
+        environment:
+            - DISCORD_TOKEN=${DISCORD_TOKEN}
+            - DB_HOST=database
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DEBUG=true
+            - YOUTUBE_DEVELOPER_KEY=${YOUTUBE_DEVELOPER_KEY}
+            - DO_FULL_SYNC=true
+        links:
+            - database:database
+        ports:
+            - 5050:5050
+        volumes:
+            - ./config/core/:/app/config
+
+    database:
+        image: mariadb:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT}
+            - MYSQL_DATABASE=${DB_NAME}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+        ports:
+            - 34066:3306
+        volumes:
+            - db_vol:/var/lib/mysql
+            - ./config/database:/etc/mysql/conf.d
+        
+volumes:
+    db_vol:
